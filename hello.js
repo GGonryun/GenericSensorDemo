@@ -13,6 +13,9 @@ function init() {
   // do stuff
   document.getElementById("test").addEventListener("click", function() {
     console.log("Hello World!");
+    if ("LinearAccelerationSensor" in window) {
+      console.log("active!");
+    }
   });
 }
 
