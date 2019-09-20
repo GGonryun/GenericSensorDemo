@@ -29,13 +29,13 @@
     let topScore = 0;
     if ("LinearAccelerationSensor" in window) {
       const shakeThreshold = 15;
+      let highScore = 0;
 
       let sensor = new LinearAccelerationSensor({
         frequency: 60
       });
 
       sensor.addEventListener("reading", () => {
-        let highScore = 0;
         let power = Math.round(sensor.x);
 
         if (power > shakeThreshold) {
