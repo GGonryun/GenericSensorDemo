@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <body
+    style="display:flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh"
+  >
+    <h1>Test Your Might!</h1>
+    <h2 id="description">
+      Hold Phone Sideways & Punch!
+    </h2>
+    <img
+      src="https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/boxing_glove.png"
+      height="512"
+      width="512"
+      style=" max-height: 80%; max-width: 80%;"
+    />
+    <span style="display: flex;">
+      <h3>Score:</h3>
+      <h4 id="score">00</h4>
+    </span>
+    <span style="display: flex; ">
+      <h3>High Score:</h3>
+      <h4 id="highscore">00</h4>
+    </span>
+  </body>
+  <div>
+    <a href="./index.html">Go Back</a>
+  </div>
+  <script>
+    let topScore = 0;
+    if (window.linearAccelerationSensor) {
+      const shakeThreshold = 15;
+
+      let sensor = new LinearAccelerationSensor({
+        frequency: 60
+      });
+
+      sensor.addEventListener("reading", () => {
+        let highScore = 0;
+        let power = Math.round(sensor.x);
+
+        document.getElementById("score").innerHTML = power;
+
+        if (power > shakeThreshold) {
+          if (power > highScore) {
+            highScore = power;
+            document.getElementById("highscore").innerHTML = power;
+          }
+        }
+      });
+
+      sensor.start();
+    } else {
+      document.getElementById("description  ").innerHTML =
+        "Accelerometer is not detected.";
+    }
+  </script>
+</html>
