@@ -15,24 +15,137 @@ function init() {
   document.getElementById(
     "secureContextRequired"
   ).innerHTML = window.isSecureContext ? "" : "HTTPS IS NECESSARY";
-  document.getElementById("ambientLightSensor").innerHTML =
-    "AmbientLightSensor" in window ? "active" : "inactive";
-  document.getElementById("proximitySensor").innerHTML =
-    "ProximitySensor" in window ? "active" : "inactive";
+
+  if ("AmbientLightSensor" in window) {
+    enableAmbientLightSensor();
+  }
+  if ("ProximitySensor" in window) {
+    enableProximitySensor();
+  }
+  if ("Magnetometer" in window) {
+    enableMagnetometer();
+  }
+  if ("Accelerometer" in window) {
+    enableAccelerometer();
+  }
+  if ("Gyroscope" in window) {
+    enableGyroscope();
+  }
+  if ("GravitySensor" in window) {
+    enableGravitySensor();
+  }
+  if ("LinearAccelerationSensor" in window) {
+    enableLinearAccelerationSensor();
+  }
+}
+
+function enableAmbientLightSensor() {
+  const als = new AmbientLightSensor({ frequency: 20 });
+  als.addEventListener("activate", () => console.log("Ready to measure EV."));
+  als.addEventListener("error", event => {
+    document.getElementById(
+      "ambientLightSensor"
+    ).innerHTML = `Error: ${event.error.name}`;
+  });
+
+  als.addEventListener("reading", () => {
+    // Defaut ISO value.
+    const ISO = 100;
+    // Incident-light calibration constant.
+    const C = 250;
+
+    let EV = Math.round(Math.log2((als.illuminance * ISO) / C));
+    document.getElementById(
+      "ambientLightSensor"
+    ).innerHTML = `Exposure Value (EV) is: ${EV}`;
+  });
+
+  als.start();
+
+  return "active";
+}
+
+function enableProximitySensor() {
+  let sensor = new ProximitySensor();
+  sensor.start();
+
+  sensor.onreading = () => {
+    document.getElementById("proximitySensor").innerHTML = sensor.distance;
+  };
+
+  sensor.onerror = event => {
+    document.getElementById(
+      "proximitySensor"
+    ).innerHTML = `${event.error.name}, ${event.error.message}`;
+  };
+}
+
+function enableMagnetometer() {
+  let sensor = new Magnetometer();
+  sensor.start();
+  let heading = Math.atan2(sensor.y, sensor.x) * (180 / Math.PI);
   document.getElementById("magnetometer").innerHTML =
-    "magnetometer" in window ? "active" : "inactive";
-  document.getElementById("accelerometer").innerHTML =
-    "accelerometer" in window ? "active" : "inactive";
-  document.getElementById("gyroscope").innerHTML =
-    "gyroscope" in window ? "active" : "inactive";
-  document.getElementById("gravitySensor").innerHTML =
-    "gravitySensor" in window ? "active" : "inactive";
-  document.getElementById("linearAccelerationSensor").innerHTML =
-    "LinearAccelerationSensor" in window ? "active" : "inactive";
-  document.getElementById("relativeOrientationSensor").innerHTML =
-    "RelativeOrientationSensor" in window ? "active" : "inactive";
-  document.getElementById("absoluteOrientationSensor").innerHTML =
-    "AbsoluteOrientationSensor" in window ? "active" : "inactive";
+    "Heading in degrees: " + heading;
+}
+
+function enableAccelerometer() {
+  let sensor = new Accelerometer();
+  sensor.start();
+
+  sensor.onreading = () => {
+    let coordinates = `X:  ${sensor.x} Y: ${sensor.y} Z: ${sensor.z}`;
+    document.getElementById("accelerometer").innerHTML = coordinates;
+  };
+
+  sensor.onerror = event => {
+    document.getElementById(
+      "accelerometer"
+    ).innerHTML = `${event.error.name}, ${event.error.message}`;
+  };
+}
+
+function enableGravitySensor() {
+  let sensor = new GravitySensor({ frequency: 5, referenceFrame: "screen" });
+
+  sensor.onreading = () => {
+    if (sensor.y >= 9.8) {
+      document.getElementById("magnetometer").innerHTML =
+        "Web page is perpendicular to the ground.";
+    }
+  };
+
+  sensor.start();
+}
+
+function enableLinearAccelerationSensor() {
+  const shakeThreshold = 10;
+
+  let sensor = new LinearAccelerationSensor({ frequency: 60 });
+
+  sensor.addEventListener("reading", () => {
+    if (sensor.x > shakeThreshold) {
+      document.getElementById("linearAccelerationSensor").innerHTML =
+        "SHAKE DETECTED";
+    }
+  });
+
+  sensor.start();
+}
+
+function enableGyroscope() {
+  let sensor = new Gyroscope();
+  sensor.start();
+
+  sensor.onreading = () => {
+    document.getElementById(
+      "gyroscope"
+    ).innerHTML = `X: ${sensor.x}, Y: ${sensor.y}, Z: ${sensor.z}`;
+  };
+
+  sensor.onerror = event =>
+    (document.getElementById(
+      "gyroscope"
+    ).innerHTML = `${event.error.name}, ${event.error.message}`);
 }
 
 /* for Mozilla/Opera9 */
