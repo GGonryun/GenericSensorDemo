@@ -40,7 +40,9 @@ function init() {
 }
 
 function enableAmbientLightSensor() {
-  const als = new AmbientLightSensor({ frequency: 20 });
+  const als = new AmbientLightSensor({
+    frequency: 20
+  });
   als.addEventListener("activate", () => console.log("Ready to measure EV."));
   als.addEventListener("error", event => {
     document.getElementById(
@@ -93,7 +95,9 @@ function enableAccelerometer() {
   sensor.start();
 
   sensor.onreading = () => {
-    let coordinates = `X:  ${sensor.x} Y: ${sensor.y} Z: ${sensor.z}`;
+    let coordinates = `X:  ${Math.round(sensor.x)} Y: ${Math.round(
+      sensor.y
+    )} Z: ${Math.round(sensor.z)}`;
     document.getElementById("accelerometer").innerHTML = coordinates;
   };
 
@@ -105,12 +109,18 @@ function enableAccelerometer() {
 }
 
 function enableGravitySensor() {
-  let sensor = new GravitySensor({ frequency: 5, referenceFrame: "screen" });
+  let sensor = new GravitySensor({
+    frequency: 5,
+    referenceFrame: "screen"
+  });
 
   sensor.onreading = () => {
     if (sensor.y >= 9.8) {
       document.getElementById("magnetometer").innerHTML =
         "Web page is perpendicular to the ground.";
+    } else {
+      document.getElementById("magnetometer").innerHTML =
+        "Web page is not stable!";
     }
   };
 
@@ -120,8 +130,11 @@ function enableGravitySensor() {
 function enableLinearAccelerationSensor() {
   const shakeThreshold = 10;
 
-  let sensor = new LinearAccelerationSensor({ frequency: 60 });
-
+  let sensor = new LinearAccelerationSensor({
+    frequency: 60
+  });
+  document.getElementById("linearAccelerationSensor").innerHTML =
+    "AWAITING SHAKE!";
   sensor.addEventListener("reading", () => {
     if (sensor.x > shakeThreshold) {
       document.getElementById("linearAccelerationSensor").innerHTML =
@@ -137,9 +150,9 @@ function enableGyroscope() {
   sensor.start();
 
   sensor.onreading = () => {
-    document.getElementById(
-      "gyroscope"
-    ).innerHTML = `X: ${sensor.x}, Y: ${sensor.y}, Z: ${sensor.z}`;
+    document.getElementById("gyroscope").innerHTML = `X: ${Math.round(
+      sensor.x
+    )}, Y: ${Math.round(sensor.y)}, Z: ${Math.round(sensor.z)}`;
   };
 
   sensor.onerror = event =>
