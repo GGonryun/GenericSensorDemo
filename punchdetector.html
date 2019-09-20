@@ -27,7 +27,7 @@
   </div>
   <script>
     let topScore = 0;
-    if (window.linearAccelerationSensor) {
+    if ("LinearAccelerationSensor" in window) {
       const shakeThreshold = 15;
 
       let sensor = new LinearAccelerationSensor({
@@ -38,12 +38,10 @@
         let highScore = 0;
         let power = Math.round(sensor.x);
 
-        document.getElementById("score").innerHTML = power;
-
         if (power > shakeThreshold) {
+          document.getElementById("score").innerHTML = power;
           if (power > highScore) {
-            highScore = power;
-            document.getElementById("highscore").innerHTML = power;
+            document.getElementById("highscore").innerHTML = highScore = power;
           }
         }
       });
