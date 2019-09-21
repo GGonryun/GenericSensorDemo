@@ -1,6 +1,6 @@
 <main style="font-size: 2rem;display:flex;justify-content:space-around;align-items:center;flex-flow:column wrap;">
   <h1>Generic Sensors API</h1>
-  <div>
+  <div id="demos" hidden>
     <a style="padding:.3rem;margin:.3rem;" href=" ./genericsensors.html">Generic Sensors</a>
     <a style="padding:.3rem;margin:.3rem;" href="./devicemotion.html">Device
       Motion</a>
@@ -8,4 +8,13 @@
       Your
       Might!</a>
   </div>
+  <h2 id="warning" hidden>Secure Context is required to run these demos, please use 'https://'</h2>
 </main>
+<script>
+  if (window.isSecureContext) {
+    // Page is a secure context so service workers are now available
+    document.getElementById("demos").removeAttribute("hidden");
+  } else {
+    document.getElementById("warning").removeAttribute("hidden");
+  }
+</script>
