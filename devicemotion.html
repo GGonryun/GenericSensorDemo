@@ -1,8 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    Demo!
-  </body>
-  <script src="devicemotion.js"></script>
-  <a href="./index.html">Go Back</a>
+<div class="main">
+  <h2>Device Orientation</h2>
+  <table>
+    <tr>
+      <td>Event Supported</td>
+      <td id="doEvent"></td>
+    </tr>
+    <tr>
+      <td>Tilt Left/Right [gamma]</td>
+      <td id="doTiltLR"></td>
+    </tr>
+    <tr>
+      <td>Tilt Front/Back [beta]</td>
+      <td id="doTiltFB"></td>
+    </tr>
+    <tr>
+      <td>Direction [alpha]</td>
+      <td id="doDirection"></td>
+    </tr>
+  </table>
+</div>
+
+<div class="container" style="perspective: 300;">
+  <img src="https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582748_960_720.png" id="imgLogo" class="logo">
+</div>
+
+<script src="devicemotion.js"></script>
+<a href="./index.html">Go Back</a>
+
 </html>
